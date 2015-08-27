@@ -86,3 +86,32 @@ public:
         return result;
     }
 };
+
+
+/**** another decent solution****/
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) 
+    {
+        vector<int> output;
+        if(root == NULL)
+            return output;
+
+        stack<TreeNode*> stk;
+
+        stk.push(root);
+        while(!stk.empty())
+        {
+            TreeNode *t = stk.top();
+            stk.pop();
+            output.push_back(t->val);
+            if(t->left)
+                stk.push(t->left);
+            if(t->right)
+                stk.push(t->right);
+        }
+
+        reverse(output.begin(), output.end());
+        return output;
+    }
+};
