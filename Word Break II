@@ -1,0 +1,60 @@
+class Solution {
+public:
+    vector<string> wordBreak(string s, unordered_set<string>& wordDict) {
+        int n = s.size();
+        vector<bool> dp(n+1,false);
+        if(wordDict.size() == 0) return vector<string>();
+        string ans;
+       
+        // dp algorithm used here. 
+        dp[0] = true;
+        for(int i = 0;i<n;i++)
+            if(dp[i]!=0)
+            for(int j = 1; j<=n-i;j++)
+            {
+                string substr = s.substr(i,j);
+                if(isInDictionary(substr,wordDict))
+                    dp[i+j] = true;
+            }
+        
+        if(!dp[n]) return vector<string>();
+        
+        //backtrack to output the result
+        wordBreak_helper(0,ans,s,dp,wordDict);
+        return result;
+    }
+    void wordBreak_helper(int idx, string &ans,string &s,vector<bool> &dp,unordered_set<string>& wordDict)
+    {
+        if(idx == s.size())
+        {
+            result.push_back(ans);
+            return;
+        }
+        
+        //backtracking algorithm
+        for(int j = 1;j<=s.size()-idx;j++)
+        {
+          string str = s.substr(idx,j);
+          if(dp[idx+j]!=0 && isInDictionary(str,wordDict))
+          {
+              ans = ans+str;
+              if((idx+j) != s.size()) ans = ans + " ";
+              wordBreak_helper(idx+j, ans,s,dp,wordDict);
+              if((idx+j) != s.size())ans.erase(ans.size()-str.size()-1,str.size()+1);
+              else ans.erase(ans.size()-str.size(),str.size());
+          }
+        }
+    }
+    
+    bool isInDictionary(string input, unordered_set<string>& wordDict)
+    {
+        std::unordered_set<std::string>::const_iterator got = wordDict.find (input);
+        if ( got == wordDict.end() ) //not found
+            return false;
+        else
+            return true;
+    }
+    
+    private:
+    vector<string> result;
+};
