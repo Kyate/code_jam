@@ -1,0 +1,45 @@
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> my_stack;
+        for(int i = 0;i<s.size();i++)
+        {
+            if( s[i]=='(' || s[i]==')' || s[i]=='[' || s[i]==']' || s[i]=='{' || s[i]=='}')
+            {
+                switch (s[i])
+                {
+                    case '(':
+                        if(!my_stack.empty() && my_stack.top()==')')return false;
+                        else my_stack.push('(');
+                        break;
+                    case ')':
+                         if((!my_stack.empty() && my_stack.top()!='(') || my_stack.empty())
+                            return false;
+                         else my_stack.pop();
+                         break;
+                   case '[':
+                        if(!my_stack.empty() && my_stack.top()==']') return false;
+                        else my_stack.push('[');
+                        break;
+                    case ']':
+                         if((!my_stack.empty() && my_stack.top()!='[') || my_stack.empty())
+                            return false;
+                         else my_stack.pop();
+                         break;
+                      case '{':
+                        if(!my_stack.empty() && my_stack.top()=='}') return false;
+                        else my_stack.push('{');
+                        break;
+                    case '}':
+                         if((!my_stack.empty() && my_stack.top()!='{') || my_stack.empty())
+                            return false;
+                         else my_stack.pop();
+                         break;
+                    default:
+                         break;
+                }
+            }
+        }
+        return my_stack.empty()? true:false;
+    }
+};
