@@ -1,0 +1,75 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if(head == NULL)return true;
+        // remember here you need to copy the head, 
+        //because in the function reverse_node, it will change head contents.
+        ListNode *copy_head = copyNodes(head);
+        ListNode *reverse_head = reverse_node(head);
+        print(copy_head);
+        print(reverse_head);
+       
+        while(1)
+        {
+            if(reverse_head==NULL || copy_head==NULL ) break;
+            if(copy_head->val != reverse_head->val)
+               return false;
+            else
+            {
+                copy_head = copy_head->next;
+                reverse_head = reverse_head->next;
+            }
+        }
+        return true;
+    }
+    
+     ListNode* copyNodes(ListNode* head)//deep copy
+     {
+         ListNode * copy_node;
+         ListNode * node = new ListNode(head->val);
+         copy_node = node;
+         head = head->next;
+         while(1)
+         {
+             if(head == NULL) break;
+             node->next  = new ListNode(head->val);
+             node = node->next;
+             head = head->next;
+         }
+         return copy_node;
+     }
+    
+    ListNode* reverse_node(ListNode* head)  
+    // the following approach will change the address of head during the return, why???????
+    {
+        ListNode *pre = NULL;
+        ListNode *curr = head;
+        ListNode *next= NULL;
+        while(curr!=NULL)
+        {
+            next = curr->next;
+            curr->next = pre;
+            pre = curr;
+            curr = next;
+        }
+        return pre;
+    }
+    
+    void print(ListNode *node)
+    {
+        while(node)
+        {
+            printf("%d-->",node->val);
+            node = node->next;
+        }
+        printf("\n");
+    }
+};
