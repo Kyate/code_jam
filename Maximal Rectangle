@@ -1,0 +1,66 @@
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+      int m = matrix.size();
+      if(m==0) return 0;
+      
+      int n = matrix[0].size();
+     
+      vector<int> height(n);
+      
+      int max_rectangle_area = INT_MIN;
+      
+      for(int i = 0;i<m;i++)
+      {
+          for(int j = 0;j<n;j++)
+          {
+              if(matrix[i][j] =='0') height[j] = 0;
+              else height[j] = height[j]+1;
+          }
+          int rectangle_area = largestRectangleArea(height);
+          if(rectangle_area>max_rectangle_area)
+             max_rectangle_area = rectangle_area; 
+      }
+      return max_rectangle_area;
+    }
+    
+    
+   int largestRectangleArea(vector<int>& height) {
+        stack<int> index; //using the stack to save the indexes.
+        int area, max_area = INT_MIN;
+        int n = height.size();
+        if(n==0) return 0;
+        int i;
+        for(i = 0;i<n;i++)
+        {
+            int curr_height = height[i];
+            if(index.empty() || (!index.empty() && curr_height >=height[index.top()]))
+            {
+                index.push(i);
+            }
+            else
+            {
+                while(!index.empty())                
+                {
+                    int top_index = index.top();
+                    if(curr_height>height[top_index]) break;
+                    index.pop();
+                    if(index.empty()) area = height[top_index] * i;
+                    else area = height[top_index]*(i-index.top()-1);
+                    if(area>max_area) max_area = area;
+                }
+                index.push(i);
+            }
+        }
+        
+        while(!index.empty())
+        {
+            int top_index = index.top();
+            index.pop();
+            if(index.empty()) area = height[top_index] * i;
+            else area = height[top_index]*(i-index.top()-1);
+            if(area>max_area) max_area = area;
+        }
+        return max_area;
+    }
+};
