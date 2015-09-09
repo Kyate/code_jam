@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<int> ans;
+        vector<vector<int> > result;
+        result.emplace_back(vector<int>{});
+        subsets_helper(nums, 0, &ans, &result);
+        return result;
+    }
+
+private:
+    void subsets_helper(vector<int>& s, int m, vector<int>* ans, vector<vector<int> >* res) {
+        if (!ans->empty()) {
+                res->emplace_back(*ans);
+        }
+        for (int i = m; i < s.size() ; ++i) {
+            if (i != m && s[i] == s[i-1]) continue;
+            ans->emplace_back(s[i]);
+            subsets_helper(s, i + 1, ans, res);
+            ans->pop_back();
+        }
+    }
+};
