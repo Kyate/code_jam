@@ -1,0 +1,56 @@
+class Solution {
+public:
+/**********************************************************
+    vector<vector<int>> permute(vector<int>& nums) {
+       vector<vector<int>> result;
+       
+       result.push_back(vector<int>());
+       
+       for(int i = 0;i<nums.size();i++)
+        {
+            vector<vector<int>> current;
+            for(auto it = result.begin();it!=result.end();it++)
+            {
+                for (int j = 0;j< (*it).size()+1;j++)
+                {
+                    (*it).insert((*it).begin()+j,nums[i]);
+                    current.push_back((*it));
+                    (*it).erase((*it).begin()+j);
+                }
+            }
+            result = current;
+        }
+        return result;
+    }
+    
+    *****************************************************/
+     vector<vector<int>> permute(vector<int>& nums) {
+        permuation(nums,0);
+        return result;
+    }
+
+private:    
+    void permuation(vector<int>&nums,int left)
+    {
+        if (left == nums.size()-1) {
+            result.push_back(nums);
+            return ;
+        }
+        else 
+        {
+        for (int i = left; i <= nums.size()-1; i++) {
+            swap(nums, left, i);
+            permuation(nums, left + 1);
+            swap(nums, left, i);
+            }
+        }
+    }
+    
+    void swap(vector<int>&nums, int i,int j)
+    {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+    vector<vector<int>> result;
+};
