@@ -1,0 +1,86 @@
+class Solution {
+public:
+    string numberToWords(int num) {
+        vector<int> chunk_words;
+        int divide = 1000;
+        int rem;
+        string final_result="";
+        string unit;
+mymap[0] ="Zero";        
+mymap[1] = "One"; mymap[2] = "Two"; mymap[3] = "Three"; mymap[4] = "Four";
+mymap[5] = "Five"; mymap[6] = "Six"; mymap[7] = "Seven"; mymap[8] = "Eight";
+mymap[9] ="Nine"; mymap[10]="Ten"; mymap[11] ="Eleven"; mymap[12]="Twelve";
+mymap[13] ="Thirteen"; mymap[14]="Fourteen"; mymap[15] ="Fifteen"; mymap[16]="Sixteen";
+mymap[17] ="Seventeen"; mymap[18]="Eighteen"; mymap[19] ="Nineteen"; 
+mymap[20]="Twenty"; 
+mymap[30]="Thirty";
+mymap[40]="Forty";
+mymap[50]="Fifty";
+mymap[60]="Sixty";
+mymap[70]="Seventy";
+mymap[80]="Eighty";
+mymap[90]="Ninety";
+        
+        if(num==0)
+           return "Zero";
+         
+        while(num)
+        {
+            rem = num%divide;
+            chunk_words.push_back(rem);
+            num = num/divide;
+        }
+        
+        for(int i = chunk_words.size()-1;i>=0;i--)
+        {
+          
+                int chunk_num = chunk_words[i];
+                string s=convert_chunk_num_english_words(chunk_num);
+                if(i==3) unit = " Billion";
+                if(i==2) unit = " Million";
+                if(i==1) unit = " Thousand";
+                if(i==0) unit = "";
+                if(s=="") continue;
+               
+                if(final_result=="")
+                    final_result = final_result+s + unit;
+                else
+                     final_result = final_result+" "+s + unit;
+        }
+        
+        return final_result;
+        
+    }
+    string convert_chunk_num_english_words(int num)
+    {
+        string result="";
+        int divide;
+        if(num==0) return result;
+        divide = num/100;
+        if(divide>=1) 
+            result=mymap[divide]+" Hundred";
+        num = num-divide*100;
+        
+        divide = num/10;
+        if(divide>=2)
+        {
+            if(result=="")
+                result = result +mymap[divide*10];
+            else
+                result = result +" "+mymap[divide*10];
+            num = num-divide*10;
+            if(num!=0)
+               result = result+" "+mymap[num];
+        }
+        else
+        {
+            if(num!=0)
+            if(result=="")
+               result = result+mymap[num];
+            else
+                result = result+" "+mymap[num];
+        }
+        return result;
+    }
+    unordered_map<int,string> mymap;
+};
