@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+       /****************************************************************
+       ********************solution from website **********************
+       *****************************************************************/
+       /*int lenh = haystack.length();
+        int lenn = needle.length();
+        bool flag = true;
+        if(needle == "") return 0;
+        for(int i = 0; i < lenh - lenn + 1; i++) {
+            if(haystack[i] == needle[0]) {
+                for(int j = 0; j < lenn; j++) {
+                    if(haystack[j + i] != needle[j]) {
+                        flag = false;
+                        break;
+                    } else flag = true;
+                }
+                if(flag) return i;
+            }
+        }
+        return -1;
+       */
+        /****************************************************************
+       ********************solution from website **********************
+       *****************************************************************/
+        if(needle == "") return 0;
+        bool matched = true;
+        for(int i = 0; i< haystack.length()-needle.length()+1;i++)
+        {
+            if(haystack[i] == needle[0])//the first letter are matching
+            {
+                for(int k = 0;k<needle.length();k++)
+                   if(needle[k] != haystack[i+k])
+                   {
+                           matched = false;
+                           break;
+                   }
+                   else
+                       matched = true;
+                if(matched == true)
+                  return i;
+            }
+        }
+        return -1;
+    }
+};
