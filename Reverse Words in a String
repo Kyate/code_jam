@@ -1,0 +1,37 @@
+class Solution {
+public:
+    void reverseWords(string &s) {
+        stack<string> mystack;
+        int n = s.size();
+        int pos = 0;
+        while(pos<n)
+        {
+            if(s[pos]==' ') 
+            {
+                pos++;
+                continue;   
+            }
+            else
+            {
+              string word = "";
+              while(s[pos]!=' '&&pos<n)
+              {
+                word = word+s[pos];
+                pos++;
+              }
+              mystack.push(word);
+            }
+        }
+        //write back.
+        s.clear();
+        while(!mystack.empty())
+        {
+            string word = mystack.top();
+            mystack.pop();
+            if(mystack.empty())
+                s = s+word;
+            else
+                s = s+word+" ";
+        }
+    }
+};
