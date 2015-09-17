@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int reverse(int x) {
+        queue<int>mystack;
+        bool b_negative = false;
+        long new_x=0;
+        if(x==-2147483648)//why this, very strange.??????????????????
+        return 0;
+        if(x<0) 
+        { 
+            x = abs(x);
+            b_negative = true;
+            cout << abs(x) << endl;
+        }
+        
+        while(x!=0)
+        {
+            cout << "pushing:" << x%10 <<endl;
+            cout << " x = " << x << endl;
+            mystack.push(x%10);
+            x = x/10;
+        }
+        
+        while(!mystack.empty())
+        {
+            new_x = new_x*10+mystack.front();
+            mystack.pop();
+        }
+      
+        if(new_x>INT_MAX) return 0;
+        
+        if(b_negative) return new_x*(-1);
+        else return new_x;
+    }
+};
