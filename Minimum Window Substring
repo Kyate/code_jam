@@ -1,0 +1,45 @@
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        //create the hash table for string t.
+        unordered_map<char, int> T;
+        unordered_map<char, bool> found;
+        int minLen= s.size()+1;
+        int minLeft=0,minRight;
+        
+        for(int i = 0;i<t.size();i++)
+        {
+            T[t[i]]++;
+            found[t[i]] = true; //indicate the occurance. 
+        }
+        //cout << "debug " << endl;
+        int count = 0;  
+        for (int left=0,right=0;right<s.size();right++)
+        {
+            //get the char at end of string.
+            if(found[s[right]])//see right charcter in the T.
+            {
+                T[s[right]]--; //reduce the number of right character
+                if(T[s[right]]>=0) count++;
+                //cout << "debug 2" <<endl;
+                while(count == t.size())
+                {
+                    if(right-left+1<minLen)
+                    {
+                        minLeft = left;
+                        minRight = right;
+                        minLen = right-left+1;
+                    }
+                    if(found[s[left]]) //see the left character in the T
+                    {
+                        T[s[left]]++;  
+                        if(T[s[left]]>0) count--; //it must be large than 0.
+                    }
+                    left++;
+                }
+            }
+        }
+        return minLen>s.size()?"":s.substr(minLeft,minLen);
+            
+    }
+};
