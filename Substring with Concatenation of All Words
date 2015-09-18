@@ -1,0 +1,61 @@
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+       int m = words.size();
+       int n = words[0].size();
+       int s_size = s.size();
+       int start = 0;
+       string substr;
+       vector<int> result;
+       
+       for(int i = 0;i<m;i++)
+           mymap[words[i]]++;
+       
+       while(start+n*m<=s_size)
+       {
+           substr = s.substr(start,n);
+           cout << substr << endl;
+           if(contains(substr))
+               if(check_all_words(s.substr(start,n*m),words))
+                 result.push_back(start);
+          
+           start++;
+       }
+       return result;
+    }
+    
+bool contains(string str)
+{
+    if(mymap.find(str)!=mymap.end())
+       return true;
+    else
+       return false;
+}
+
+bool check_all_words(string str,vector<string>& words)
+{
+    int m = words.size();
+    int n = words[0].size();
+    unordered_map<string,int> tmp_map;
+    for(int i=0;i<m;i++)
+    {
+        string sub = str.substr(i*n,n);
+        if(!contains(sub))
+           return false;
+        else
+          tmp_map[sub]++;
+    }
+    
+    //make sure the two maps exactly same.
+    for(int i =0 ;i<m;i++)
+    {
+        if(mymap[words[i]] != tmp_map[words[i]])
+          return false;
+    }
+    
+    return true;
+}
+    
+private:
+     unordered_map<string,int> mymap;
+};
