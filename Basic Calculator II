@@ -1,0 +1,148 @@
+/******************************************************************
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string contains only non-negative integers, +, -, *, / operators and empty spaces . The integer division should truncate toward zero.
+
+You may assume that the given expression is always valid.
+
+Some examples:
+
+"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5
+
+Note: Do not use the eval built-in library function.
+
+Credits:
+Special thanks to @ts for adding this problem and creating all test cases.
+*************************************************************************/
+
+
+
+class Solution {
+public:
+    int calculate(string s) {
+        int n = s.size();
+        stack<int> num_stack;
+        stack<char> sign_stack;
+        int num, sum=0;
+        num = 0;
+        for(int i = 0;i<n;i++)
+        {
+            if(s[i]==' ')continue;
+            if(s[i]>='0' && s[i]<='9')
+                 num = num*10+s[i]-'0';
+             else if(s[i]=='+' || s[i]=='-'||s[i]=='*'||s[i]=='/')
+             {
+                 if(!sign_stack.empty()&&(sign_stack.top()=='*' || sign_stack.top()=='/'))
+                 {
+                     char sign = sign_stack.top();
+                     sign_stack.pop();
+                     int pre_num = num_stack.top();
+                     num_stack.pop();
+                     if(sign == '*') num_stack.push(pre_num*num);
+                     if(sign == '/') num_stack.push(pre_num/num);
+                     sign_stack.push(s[i]);
+                 }
+                 else
+                 {
+                    num_stack.push(num);
+                    sign_stack.push(s[i]);
+                 }
+                 num = 0; 
+             }
+         }
+         
+         //hanle the last number.
+         if(!sign_stack.empty() && (sign_stack.top()=='*' || sign_stack.top()=='/'))
+         {
+             char sign = sign_stack.top();
+             sign_stack.pop();
+             int pre_num = num_stack.top();
+             num_stack.pop();
+             if(sign == '*') num_stack.push(pre_num*num);
+             if(sign == '/') num_stack.push(pre_num/num);
+         }
+         else
+           num_stack.push(num);
+         
+         //compute the sum value 
+         while(!num_stack.empty())
+         {
+             int  tmp_num = num_stack.top();
+             if(!sign_stack.empty())
+             {
+                 char sign = sign_stack.top();
+                 sign_stack.pop();
+                 if(sign == '+') sum = sum+tmp_num;
+                 if(sign == '-') sum = sum-tmp_num;
+             }
+             else
+                 sum = sum + tmp_num;
+             num_stack.pop();
+         }
+         return sum;
+    }
+};
+
+/** C++ solution with queue **************
+ * class Solution {
+public:
+    int calculate(string s) {
+        queue<int> numq;
+        queue<char> signq;
+        int todo_num;
+        char todo_sign = 0;
+        char sign;
+        int num = 0;
+        int n1, n2;
+        for(char c : s)
+        {
+            if(isdigit(c))
+            {
+                num = num*10 + c - '0';
+            }
+            else if(c == '+' || c == '-')
+            {
+                if(todo_sign != 0)
+                {
+                    if(todo_sign == '*')
+                        num = todo_num * num;
+                    else if(todo_sign == '/')
+                        num = todo_num / num;
+                    todo_sign = 0;
+                }
+                numq.push(num); num = 0;
+                signq.push(c);
+            }
+            else if(c == '*' || c == '/')
+            {
+                if(todo_sign == '*')
+                    todo_num = todo_num * num;
+                else if(todo_sign == '/')
+                    todo_num = todo_num / num;
+                else
+                    todo_num = num;
+                todo_sign = c;
+                num = 0;
+            }
+        }
+        if(todo_sign == '*')
+            num = todo_num*num;
+        if(todo_sign == '/')
+            num = todo_num / num;
+        numq.push(num);
+        n1 = numq.front(); numq.pop();
+        while(signq.size() > 0)
+        {
+            sign = signq.front(); signq.pop();
+            n2 = numq.front(); numq.pop();
+            if(sign == '+')
+                n1 = n1 + n2;
+            else if(sign == '-')
+                n1 = n1 - n2;
+        }
+        return n1;
+    }
+};
+********************/
