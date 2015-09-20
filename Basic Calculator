@@ -1,0 +1,57 @@
+/*************************************************
+mplement a basic calculator to evaluate a simple expression string.
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers and empty spaces .
+You may assume that the given expression is always valid.
+Some examples:
+"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+Note: Do not use the eval built-in library function. 
+*************************************************/
+
+
+
+class Solution {
+public:
+    int calculate(string s) {
+       int n = s.size();
+       stack<int> stack_num;
+       stack<int> stack_sign;
+       int num = 0;
+       int sum = 0;
+       int sign = 1;
+       
+       for(int i = 0;i<n;i++)
+       {
+           if(s[i]==' ') continue;
+           else if(s[i]>='0'&&s[i]<='9')
+           {
+               num = num*10+s[i]-'0';
+           }
+           else
+           {
+               sum = sum+num*sign;
+               num = 0;
+               if(s[i]=='+')  sign = 1;
+               if(s[i]=='-')  sign = -1;
+               if(s[i]=='(')
+               {
+                   stack_num.push(sum);
+                   stack_sign.push(sign);
+                   sign = 1;
+                   sum = 0;
+               }
+                if(s[i]==')')
+                {
+                    int tmp_sum = stack_num.top();
+                    int tmp_sign = stack_sign.top();
+                    stack_num.pop();
+                    stack_sign.pop();
+                    sum = tmp_sum + sum*tmp_sign;
+                }
+           }
+       }
+       sum = sum + num*sign;
+       return sum;
+    }
+};
