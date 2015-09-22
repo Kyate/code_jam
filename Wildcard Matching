@@ -1,0 +1,62 @@
+Implement wildcard pattern matching with support for '?' and '*'.
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "*") → true
+isMatch("aa", "a*") → true
+isMatch("ab", "?*") → true
+isMatch("aab", "c*a*b") → false
+
+
+/** dp solution **/
+/**
+ * public bool IsMatch(string str, string pattern){
+    //dp[i, j] means matching status between str.Substring(0, j) and pattern.Substring(0, i)
+    bool[,] dp = new bool[pattern.Length + 1, str.Length + 1];
+    dp[0, 0] = true;
+    int i = 0, j = 0;
+    //dp[i, 0] means to match empty string; '*' is matching empty string
+    while(i < pattern.Length && pattern[i++] == '*') dp[i, 0] = true;
+    for(i = 1; i <= pattern.Length; i++)
+        for(j = 1; j <= str.Length; j++)
+            if (pattern[i - 1] == '*')
+                dp[i, j] = dp[i - 1, j] || dp[i, j - 1];
+            else if(pattern[i - 1] == '?' || pattern[i - 1] == str[j - 1])
+                dp[i, j] = dp[i - 1, j - 1];
+            else dp[i, j] = false;
+    return dp[pattern.Length, str.Length];
+}*/
+
+
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+ //dp[i, j] means matching status between str.Substring(0, j) and pattern.Substring(0, i)
+    int n = s.size();
+    int m = p.size();
+    vector<vector<bool>> dp(m+1,vector<bool>(n+1));
+    dp[0][0] = true;
+    int i = 0, j = 0;
+    //dp[i, 0] means to match empty string; '*' is matching empty string
+    while(i < m && p[i++] == '*') dp[i][0] = true;
+    for(i = 1; i <= m; i++)
+        for(j = 1; j <= n; j++)
+            if (p[i - 1] == '*')
+                dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+            else if(p[i - 1] == '?' || p[i - 1] == s[j - 1])
+                dp[i][j] = dp[i - 1][j - 1];
+            else dp[i][j] = false;
+    return dp[m][n];
+    }
+};
