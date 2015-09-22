@@ -1,0 +1,269 @@
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+
+For example,
+Given words = ["oath","pea","eat","rain"] and board =
+
+[
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+Return ["eat","oath"].
+
+
+class TrieNode{
+public:
+    bool is_end;
+    vector<TrieNode*> children;
+    TrieNode(){
+        is_end=false;
+        children=vector<TrieNode*>(26, NULL);
+    }   
+};
+
+class Trie{
+public:
+    TrieNode* getRoot(){return root;}
+    Trie(vector<string>& words){
+        root=new TrieNode();
+        for(int i=0; i<words.size(); ++i)
+            addWord(words[i]);
+    }
+    void addWord(const string& word){
+        TrieNode* cur=root;
+        for(int i=0; i<word.size(); ++i){
+            int index=word[i]-'a';
+            if(cur->children[index]==NULL)   
+               cur->children[index]=new TrieNode();
+            cur=cur->children[index];    
+        }
+        cur->is_end=true;
+    }
+private:
+    TrieNode* root;
+};
+
+class Solution {
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        Trie* trie = new Trie(words);
+        TrieNode* root=trie->getRoot();
+        set<string> result_set;
+        for(int x=0; x<board.size(); ++x)
+            for(int y=0; y<board[0].size(); ++y)
+                findWords(board, x, y, root, "", result_set);
+
+        vector<string> result;
+        for(auto it:result_set)    result.push_back(it);
+        return result;        
+    }
+private:
+    void findWords(vector<vector<char>>& board, int x, int y, TrieNode* root, string word, set<string>& result){
+        if(x<0||x>=board.size()||y<0||y>=board[0].size() || board[x][y]==' ') return;
+
+        if(root->children[board[x][y]-'a'] != NULL){
+            word=word+board[x][y];
+            root=root->children[board[x][y]-'a']; 
+            if(root->is_end) result.insert(word);
+            char c=board[x][y];
+            board[x][y]=' ';
+            findWords(board, x+1, y, root, word, result);
+            findWords(board, x-1, y, root, word, result);
+            findWords(board, x, y+1, root, word, result);
+            findWords(board, x, y-1, root, word, result);
+            board[x][y]=c;        
+        }
+    }
+};
+
+
+
+/*class TrieNode {
+public:
+    // Initialize your data structure here.
+    TrieNode() 
+    {
+     isWord = false;
+     for(int i = 0;i<26;i++)
+       children[i] = NULL;
+    }
+    bool isWord;
+    TrieNode *children[26];
+};
+
+class Trie {
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    // Inserts a word into the trie.
+    void insert(string word) {
+        int n = word.size();
+        TrieNode* node = root;
+        for(int i = 0;i<n;i++)
+        {
+            char _char = word[i];
+            if(node->children[_char-'a'] == NULL)
+                node->children[_char-'a'] = new TrieNode();
+            node = node->children[_char-'a'];
+        }
+        node->isWord = true;
+    }
+ 
+    // Returns if the word is in the trie.
+    bool search(string word) {
+        int n = word.size();
+        TrieNode* node = root;
+        for(int i = 0;i<n;i++)
+        {
+            char _char = word[i];
+            if(node->children[_char-'a'] == NULL)
+             return false;
+            else
+               node = node->children[_char-'a'];
+        }
+        return (node!=NULL)&&(node->isWord);
+    }
+
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    bool startsWith(string prefix) {
+        int n = prefix.size();
+        TrieNode* node = root;
+        for(int i = 0;i<n;i++)
+        {
+            char _char = prefix[i];
+            if(node->children[_char-'a'] == NULL)
+                return false;
+            else
+               node = node->children[_char-'a'];
+        }
+        return true;
+    }
+
+private:
+    TrieNode* root;
+};
+
+class Solution {
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        //find the maximum length of for all words. 
+        for(int i = 0;i<words.size();i++)
+        {
+            int len = words[i].size();
+            max_len_words = std::max(max_len_words,len);
+        }
+        
+        //recursive way to search possbile words and push them into possible_words
+        find_all_possible_words(board,max_len_words);
+        
+        //recursive approach to construct the trie
+        construct_Trie();
+        
+        //look for the board 
+        int m = board.size();
+        int n = board[0].size();
+        for(int i = 0;i<m;i++)
+            for(int j = 0;j<n;j++)
+            {
+                string prefix="";
+                backtrack_prefix(i, j,  m, n,0,board, prefix,words,max_len_words);
+            }
+        return found_words;
+    }
+private:
+
+Trie trie_root;
+vector<string> possible_words;
+vector<string> found_words;
+int max_len_words = -1;
+ void backtrack_prefix(int i, int j, const int m, const int n,int depth,vector<vector<char>> &board, string&prefix,vector<string>&words,int len)
+    {
+        if(depth<=len)
+        {
+           if(!isMatchPrefixWithWords(prefix, words))
+             return;
+        }
+        else
+            return;
+        prefix.push_back(board[i][j]);
+        if(i+1 < m)
+            backtrack_prefix(i+1, j, m, n, depth+1, board, prefix,words,len);
+        if(i > 0)
+            backtrack_prefix(i-1, j, m, n, depth+1,  board, prefix,words,len);
+        if(j+1 < n)
+            backtrack_prefix(i, j+1, m, n, depth+1,  board,  prefix,words,len);
+        if(j > 0)
+            backtrack_prefix(i, j-1, m, n, depth+1,  board,  prefix,words,len);
+        prefix.pop_back();
+    }
+
+bool isMatchPrefixWithWords(string prefix,vector<string>& words)
+{
+    bool flag = false;
+    int n = prefix.size();
+    
+    if(!trie_root.startsWith(prefix))
+       return false;
+    
+    for(string word:words)
+    {
+        int m = word.size();
+        if(n>m) continue;
+        
+        if(n<m && prefix == word.substr(0,n))
+           flag = true;
+           
+        if(n==m && prefix == word.substr(0,n))
+           found_words.push_back(word);
+    }
+    return flag;
+}
+
+void find_all_possible_words(vector<vector<char>>& board,int len)
+{
+     int m = board.size();
+     int n = board[0].size();
+     
+     for(int i = 0;i<m;i++)
+       for(int j = 0;j<n;j++)
+       {
+           string ans="";
+           backtrack(i, j,  m,  n,0,board, ans,possible_words,len);
+       }
+        
+}
+
+
+ void construct_Trie()
+ {
+   int len_possible_words = possible_words.size();
+   for(int i = 0;i<len_possible_words;i++)
+       trie_root.insert(possible_words[i]);
+}
+
+    
+    void backtrack(int i, int j, const int m, const int n,int depth,vector<vector<char>> &board, string&ans, vector<string>result,int len)
+    {
+        if(depth==len)
+        {
+            result.push_back(ans);
+            return;
+        }
+        ans.push_back(board[i][j]);
+        if(i+1 < m)
+            backtrack(i+1, j, m, n, depth+1,  board, ans,result,len);
+        if(i > 0)
+            backtrack(i-1, j, m, n, depth+1,  board, ans,result,len);
+        if(j+1 < n)
+            backtrack(i, j+1, m, n, depth+1,  board,  ans,result,len);
+        if(j > 0)
+            backtrack(i, j-1, m, n, depth+1,  board,  ans,result,len);
+        ans.pop_back();
+    }
+};*/
