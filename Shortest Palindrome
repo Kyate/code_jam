@@ -1,0 +1,71 @@
+/************************************************
+Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it. Find and return the shortest palindrome you can find by performing this transformation. 
+
+For example: 
+
+Given "aacecaaa", return "aaacecaaa".
+
+Given "abcd", return "dcbabcd".
+************************************************/
+
+class Solution {
+public:
+    string shortestPalindrome(string s) {
+/*
+we can construct the following string and run KMP algorithm on it: (s) + (some symbol not present in s) + (reversed string)
+
+After running KMP on that string as result we get a vector p with values of a prefix function for each character (for definition of a prefix function see KMP algorithm description). We are only interested in the last value because it shows us the largest suffix of the reversed string that matches the prefix of the original string. So basically all we left to do is to add the first k characters of the reversed string to the original string, where k is a difference between original string size and the prefix function for the last character of a constructed string. 
+*/
+        string rev_s = s;
+        reverse(rev_s.begin(), rev_s.end());
+        string l = s + "#" + rev_s;
+
+
+        vector<int> p(l.size(), 0);
+        for (int i = 1; i < l.size(); i++) {
+            int j = p[i - 1];
+            while (j > 0 && l[i] != l[j])
+                j = p[j - 1];
+            p[i] = (j += l[i] == l[j]);
+        }
+
+        return rev_s.substr(0, s.size() - p[l.size() - 1]) + s;
+        
+        /*int n = s.size();
+        if(n<=1) return s;
+        int max_len = INT_MIN;
+        int index_center;
+        int i;
+        for(i = 0;i<(n-1);i++)
+        {
+            int j = 0;
+            while(1) //based on i center, find maximum Palindrome
+            {
+                if(i-j<0 || i+j>(n-1)) // over boundary
+                  break;
+                if(s[i-j] == s[i+j])
+                  j++;
+                else
+                  break;
+            }
+            if(j>max_len)
+            {
+                max_len = j;
+                index_center = i;
+            }
+        }
+        
+        // now trying adding additional
+        string substr = s.substr(index_center+max_len,n-(index_center+max_len));
+        //reverse substr
+        for(int i= 0;i<substr.size();i++)
+        {
+            char tmp = substr[i];
+            substr[i] = substr[substr.size()-1-i];
+            substr[substr.size()-1-i] = tmp;
+        }
+        //connect the string
+        substr.append(s.substr(0,index_center+max_len));
+        return substr;*/
+    }
+};
