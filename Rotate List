@@ -1,0 +1,104 @@
+
+/*************************
+Given a list, rotate the list to the right by k places, where k is non-negative.
+
+For example:
+ Given 1->2->3->4->5->NULL and k = 2,
+ return 4->5->1->2->3->NULL.
+**********************************/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head==NULL) return NULL;
+        ListNode *pre = head;
+        ListNode *curr = head;
+        int m = 0;
+        while(curr) {curr = curr->next;m++;}
+        if(k==m) return head;
+        k = k%m; //total number of rotated 
+        if(k==0) return head;
+        curr = head;
+        while(k--)
+            curr = curr->next;
+        if(curr==NULL) return head;
+        while(curr)
+        { 
+            if(curr->next==NULL) break;
+            pre = pre->next;
+            curr = curr->next;
+        }
+        ListNode *returned_head = pre->next;
+        pre->next = NULL;
+        curr->next = head;
+        return returned_head;
+    }
+};
+
+/**
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (head == NULL)
+        {
+            return head;
+        }
+
+        if (k == 0)
+        {
+            return head;
+        }
+
+        int count = 0;
+        {
+            ListNode* cur = head;
+            while(cur != NULL)
+            {
+                count++;
+                cur = cur->next;
+            }
+        }
+
+        k = k % count;
+
+        if (k == 0)
+        {
+            return head;
+        }
+        else
+        {
+            ListNode* pre = NULL;
+            ListNode* cur = head;
+            ListNode* newHead = NULL;
+
+            for (int i = 0; i < count - k; i++)
+            {
+                pre = cur;
+                cur = cur->next;
+            }
+
+            pre->next = NULL;
+
+            newHead = cur;
+
+            while(cur != NULL)
+            {
+                pre = cur;
+                cur = cur->next;
+            }
+
+            pre->next = head;
+
+            return newHead;
+        }
+    }
+};
+*************/
