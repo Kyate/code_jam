@@ -77,3 +77,52 @@ public:
             return;
     }
 };
+//another solution base queue
+
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        int m = board.size();
+        if(m<2) return;
+        int n = board[0].size();
+        queue<pair<int,int>> myq;
+        for(int j = 0;j<m;j++)
+        {
+            if(board[j][0]=='O') myq.push(pair<int,int>{j,0});
+            if(board[j][n-1]=='O') myq.push(pair<int,int>{j,n-1});
+        }
+        
+         for(int i = 1;i<n-1;i++)
+        {
+            if(board[0][i]=='O') myq.push(pair<int,int>{0,i});
+            if(board[m-1][i]=='O') myq.push(pair<int,int>{m-1,i});
+        }
+        
+        while(!myq.empty())
+        {
+            pair<int,int> val = myq.front();
+            int j = val.first;
+            int i = val.second;
+            board[j][i] = '#';
+            myq.pop();
+            
+            if(j-1>0 && board[j-1][i] == 'O')
+                myq.push(pair<int,int>{j-1,i});
+            if(j+1<m && board[j+1][i] == 'O')
+                myq.push(pair<int,int>{j+1,i});
+            if(i-1>0 && board[j][i-1] == 'O')
+                myq.push(pair<int,int>{j,i-1});
+            if(i+1<n && board[j][i+1] == 'O')
+                myq.push(pair<int,int>{j,i+1});
+        }
+        
+        for(int j = 0;j<m;j++)
+        for(int i = 0;i<n;i++)
+        {
+            if(board[j][i]=='#')
+               board[j][i] = 'O';
+            else
+             board[j][i] = 'X';
+        }
+    }
+};
