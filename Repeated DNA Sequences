@@ -1,0 +1,114 @@
+/*********************************
+ All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: "ACGAATTCCG". When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
+
+Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
+
+For example,
+
+Given s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
+
+Return:
+["AAAAACCCCC", "CCCCCAAAAA"].
+********/
+
+
+
+
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+    /*vector<string> ret;
+    int sz = s.size();
+    unordered_map<int, bool> mp;
+    unordered_map<char, int> dict;
+    pair<int, bool> t;
+    dict['A'] = 1; //00
+    dict['C'] = 2; //01
+    dict['G'] = 3; //10
+    dict['T'] = 4; //11
+    int i, j, bit = 0;
+    const int x = ~(11 << 18); //x is used to change 20th and 19th digit (counted from right) into '0'.
+    for (i = 0; i <= sz - 10; ++i)
+    {
+        if (0 == i)
+        {
+            for (j = 0; j < 10; ++j)
+            {
+                bit <<= 2; 
+                bit += dict[s[j]]; 
+            }
+        }
+        else
+        {
+            bit &= x; //change number bit's 20th and 19th digit (counted from right) into '0'.
+            bit <<= 2;
+            bit += dict[s[i + 9]];
+        }
+        if (mp.count(bit)&&mp[bit]) 
+        {
+            printf("the key count is = %d\n",mp.count(bit));
+            ret.push_back(s.substr(i, 10)); 
+            mp[bit] = 0;
+        }
+        else
+        {
+            t = make_pair(bit, 1);
+            mp.insert(t);
+        }
+    }
+    return ret;
+    }*/
+        int length = s.size();
+        vector<string> result;
+        unordered_map<int, bool> mymap;
+        unordered_map<char, int> dict;
+        pair<int, bool> t;
+        dict['A'] = 1;
+        dict['C'] = 2;
+        dict['G'] = 3;
+        dict['T'] = 4;
+        bits = 0;
+        
+        for(int j = 0;j<=length-10;j++)
+        {
+            string substr = s.substr(j,10);
+            if(j == 0) convert_string(substr,dict, true);
+            else    convert_string(substr,dict, false);
+            
+           
+            if (mymap.count(bits) && mymap[bits]) 
+            //pay attention to how to use the mymap.count() which counts the number of keys.
+            {
+                result.push_back(substr);
+                mymap[bits] = 0;
+            }
+            else
+            {
+                t = make_pair(bits, 1);
+                mymap.insert(t);
+            }
+          }
+        return result;
+    }
+    
+    void convert_string(string substr, unordered_map<char, int>&dict,bool first)
+    {
+        if(first)
+        {
+            for(int j = 0;j<10;j++)
+            {
+               bits = bits<<2;
+               bits = bits+dict[substr[j]];
+            }
+        }
+        else
+        {
+            const int x = ~(11 << 18); 
+            bits = bits&x;
+            bits = bits<<2;
+            bits+= dict[substr[9]];
+        }
+    }
+    private:
+    int bits;
+};
