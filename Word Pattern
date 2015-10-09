@@ -1,0 +1,70 @@
+Given a pattern and a string str, find if str follows the same pattern.
+
+Examples:
+pattern = "abba", str = "dog cat cat dog" should return true.
+pattern = "abba", str = "dog cat cat fish" should return false.
+pattern = "aaaa", str = "dog cat cat dog" should return false.
+pattern = "abba", str = "dog dog dog dog" should return false.
+Notes:
+patterncontains only lowercase alphabetical letters, and str contains words separated by a single space. Each word in str contains only lowercase alphabetical letters.
+Both pattern and str do not have leading or trailing spaces.
+Each letter in pattern must map to a word with length that is at least 1.
+Credits:
+Special thanks to @minglotus6 for adding this problem and creating all test cases.
+
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        /*unordered_map<char,string> mymap1;
+        unordered_map<string,char> mymap2;
+        int n = pattern.size();
+        int m = str.size();
+        if(n==0 && m == 0) return true;
+        if(n==0 || m == 0) return false;
+        int j = 0;
+        for(int i = 0;i<n;i++)
+        {
+            char c_pattern = pattern[i];
+            string word="";
+            while( j<m && str[j]!=' '){word = word+str[j];j++;}
+            j++; //skip the space.
+             if(mymap1.find(c_pattern) == mymap1.end() && mymap2.find(word) == mymap2.end())
+            {
+                mymap1[c_pattern] = word;
+                mymap2[word]    = c_pattern;
+            }
+            else
+                if(mymap1[c_pattern].compare(word)!=0 || mymap2[word]!=c_pattern)
+                  return false;
+        }
+        printf("j = %d",j); //make sure the j = m+1 to reach the end of string.
+        return j==m+1?true:false;*/
+        
+        /************soultion from online*******************/
+        unordered_map<char,string> mymap1;
+        unordered_map<string,char> mymap2;
+        int n = pattern.size();
+        int m = str.size();
+        if(n==0 && m == 0) return true;
+        if(n==0 || m == 0) return false;
+        int j = 0;
+        for(int i = 0;i<n;i++)
+        {
+            char c_pattern = pattern[i];
+            string word="";
+            while( j<m && str[j]!=' '){word = word+str[j];j++;}
+            j++; //skip the space.
+            if (mymap1.find(c_pattern) == mymap1.end()){
+            mymap1[c_pattern] = word;
+            }
+            else if (mymap1[c_pattern] != word)  return false;
+            if (mymap2.find(word) == mymap2.end()){
+            mymap2[word] = c_pattern;
+            }
+            else if (mymap2[word] != c_pattern)  return false;
+        }
+        printf("j = %d",j); //make sure the j = m+1 to reach the end of string.
+        return j==m+1?true:false;
+
+    }
+};
