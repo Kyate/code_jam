@@ -1,0 +1,51 @@
+/********************************
+Validate if a given string is numeric.
+
+Some examples:
+"0" => true
+" 0.1 " => true
+"abc" => false
+"1 a" => false
+"2e10" => true
+
+Note: It is intended for the problem statement to be ambiguous. You should gather all requirements up front before implementing one. 
+**********************************/
+
+
+class Solution {
+public:
+    bool isNumber(string s) {
+        int n = s.size();
+        int i = 0;
+        bool flag = false;
+        /*
+        s1. leading whitespaces
+        s2. plus/minus sign;
+        s3. numbers.
+        s4. optional trailing whitespaces.
+        */
+        //skip all white spaces;
+        while(i<n && s[i]==' ')i++;
+        if(i<n && (s[i] == '+' || s[i] == '-')) i++;//skip optional +/- characters
+        while(i<n && (s[i]>='0' && s[i]<='9')) //numbers.
+        {
+            flag = true;
+            i++;
+        }
+        if(i<n && s[i] == '.')
+        {
+            i++;
+            while(i<n && (s[i]>='0' && s[i]<='9')){i++;flag = true;}
+        }
+        if(flag == true && i<n && (s[i] == 'e'||s[i] == 'E'))
+        {
+            i++;
+            flag = false;//reset the flag needed 
+            if(i<n && (s[i] == '+' || s[i] == '-')) i++;//skip optional +/- characters
+            while(i<n && (s[i]>='0' && s[i]<='9')){i++;flag = true;}
+        }
+        while(flag == true && i<n && s[i]==' ')i++;//skiping the trailing whitespaces
+        
+        return flag&&i==n?true:false;
+    }
+};
