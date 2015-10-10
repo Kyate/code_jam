@@ -5,6 +5,25 @@ Note:
 You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold additional elements from nums2.
 The number of elements initialized in nums1 and nums2 are m and n respectively.
 /*****************************************************************************************/
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+
+        int end = m + n - 1;
+        m = m - 1;
+        n = n - 1;
+
+        while(n >=0)
+        {
+            if (m < 0 || nums2.at(n) > nums1.at(m))
+                nums1.at(end--) = nums2.at(n--);
+            else
+                nums1.at(end--) = nums1.at(m--);
+        }
+    }
+};
+
+
 
 class Solution {
 public:
