@@ -1,0 +1,86 @@
+Given a list of non negative integers, arrange them such that they form the largest number.
+For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
+Note: The result may be very large, so you need to return a string instead of an integer.
+Credits:
+Special thanks to @ts for adding this problem and creating all test cases.
+
+
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        int n = nums.size();
+        insertionSort(nums, n);
+        string ans="";
+        if(nums[n-1]==0) return "0";//corner case.
+        for(int i = 0;i<n;i++)
+            ans = to_string(nums[i])+ans;
+        return ans;
+    }
+    
+    //insert sort
+    void insertionSort(vector<int>& nums, int length) {
+      int i, j, tmp;
+      for (i = 1; i < length; i++) {
+            j = i;
+            while (j > 0 && isLarger(nums[j-1],nums[j])) {
+                  tmp = nums[j];
+                  nums[j] = nums[j - 1];
+                  nums[j - 1] = tmp;
+                  j--;
+            }
+      }
+    }
+    
+    //compare two numbers
+    bool isLarger(int a, int b)
+    {
+        string sa = to_string(a);
+        string sb = to_string(b);
+        string sab = sa + sb;
+        string sba = sb + sa;
+        if(sab.compare(sba)>0) return true;
+        else return false;
+        
+        //the following approach works fine in logically. but time limit exceeded.
+        /*deque<int> da;
+        deque<int> db;
+        while(a) {da.push_back(a%10);a = a/10;}
+        while(b) {db.push_back(b%10);b = b/10;}
+        int front_a,front_b;
+        while(!da.empty() || !db.empty())
+        {
+            if(!da.empty() && !db.empty())
+            {
+                front_a = da.front();
+                front_b = db.front();
+                if(front_a>front_b) return true;
+                else if(front_a<front_b) return false;
+                else
+                {
+                    da.pop_front();
+                    db.pop_front();
+                }
+            }
+            else if(!da.empty())
+            {
+                front_b = db.front();
+                if(front_a>front_b) return true;
+                else if(front_a<front_b) return false;
+                else
+                {
+                    db.pop_front();
+                }
+            }
+            else if(!da.empty())
+            {
+                front_a = da.front();
+                if(front_a>front_b) return true;
+                else if(front_a<front_b) return false;
+                else
+                {
+                    da.pop_front();
+                }
+            }
+        }*/
+    }
+};
